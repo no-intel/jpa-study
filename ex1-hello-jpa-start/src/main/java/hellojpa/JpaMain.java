@@ -14,16 +14,13 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-//            Member findMember = em.find(Member.class, 1L);
-//            System.out.println("findMember.id = " + findMember.getId());
-//            System.out.println("findMember.name = " + findMember.getName());
-//
-//            findMember.setName("HelloJPA");
+            // 비영속
+            Member member1 = new Member(150L, "A");
+            Member member2 = new Member(160L, "A");
+            em.persist(member1);
+            em.persist(member2);
 
-            List<Member> resultList = em.createQuery("select m from Member as m", Member.class).getResultList();
-            for (var member : resultList) {
-                System.out.println("member.name = " + member.getName());
-            }
+            System.out.println("=============================================");
 
             tx.commit();
         } catch (Exception e) {
