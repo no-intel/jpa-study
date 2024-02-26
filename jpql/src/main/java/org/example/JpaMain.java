@@ -29,15 +29,9 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            List<Object[]> resultList = em.createQuery("select m.username, 'HELLO', 'She''s', true from Member m " +
-                            "where m.type = org.example.MemberType.ADMIN", Object[].class)
-                    .getResultList();
-            resultList.forEach(m -> {
-                System.out.println("m[0] = " + m[0]);
-                System.out.println("m[1] = " + m[1]);
-                System.out.println("m[2] = " + m[2]);
-                System.out.println("m[3] = " + m[3]);
-            });
+            String singleResult = em.createQuery("select group_concat(m.username) from Member m", String.class)
+                    .getSingleResult();
+            System.out.println("singleResult = " + singleResult);
 
             tx.commit();
         } catch (Exception e) {
