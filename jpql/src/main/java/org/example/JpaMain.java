@@ -13,25 +13,22 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try {
-            Member member = new Member();
-            member.setUsername("member1");
-            em.persist(member);
+            for (int i = 0; i < 100; i++) {
+                Member member = new Member();
+                member.setUsername("member" + i);
+                member.setAge(i + 1);
+                em.persist(member);
+            }
 
-            TypedQuery<Member> query = em.createQuery("select m from Member as m", Member.class);
-            List<Member> resultList = query.getResultList();
-            resultList.forEach(System.out::println);
+            em.flush();
+            em.clear();
 
-            Member parameter = em.createQuery("select m from Member AS m WHERE m.username=:parameter", Member.class)
-                    .setParameter("parameter", member.getUsername())
-                    .getSingleResult();
-            System.out.println(parameter);
-
-            List<MemberDTO> resultList1 = em.createQuery("select new org.example.MemberDTO(m.username, m.age) from Member AS m", MemberDTO.class)
+            List<Member> pagingResult = em.createQuery("select m from Member m order by m.age desc ", Member.class)
+                    .setFirstResult(0)
+                    .setMaxResults(10)
                     .getResultList();
-
-            MemberDTO memberDTO = resultList1.get(0);
-            System.out.println("memberDTO = " + memberDTO.getUsername());
-
+            System.out.println("pagingResult.size() = " + pagingResult.size());
+            pagingResult.forEach(m -> System.out.println(m.toString()));
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
