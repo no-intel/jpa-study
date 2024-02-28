@@ -3,6 +3,11 @@ package org.example;
 import jakarta.persistence.*;
 
 @Entity
+@NamedQueries(value = {
+        @NamedQuery(name = "Member.findByUsername",
+        query = "SELECT m FROM Member m where m.username = :username"
+        )
+})
 public class Member {
     @Id @GeneratedValue
     private Long id;
